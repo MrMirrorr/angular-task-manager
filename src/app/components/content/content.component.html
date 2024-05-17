@@ -1,0 +1,21 @@
+@if (isLoading) {
+
+<mat-spinner class="spinner" color="accent"></mat-spinner>
+
+} @else if (error) {
+
+<p>Error: {{ error }}</p>
+
+} @else if (tasks.length) {
+
+<div>
+  @for (task of tasks; track task.id) {
+  <app-task-card [task]="task"></app-task-card>
+  }
+</div>
+
+} @else {
+
+<p>No tasks found</p>
+
+}

@@ -19,22 +19,12 @@ export class TaskListComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    this.taskService.tasks$.subscribe((tasks) => {
-      this.tasks = tasks;
-    });
-
-    this.isLoading = true;
-    this.taskService.fetchTasks().subscribe(
-      (tasks) => {
-        this.tasks = tasks;
-        this.isLoading = false;
-        this.error = '';
-      },
-      (error) => {
-        console.log(error);
-        this.isLoading = false;
-        this.error = error.message;
-      }
+    this.taskService.isLoading$.subscribe(
+      (isLoading) => (this.isLoading = isLoading)
     );
+
+    this.taskService.error$.subscribe((error) => (this.error = error));
+
+    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
   }
 }

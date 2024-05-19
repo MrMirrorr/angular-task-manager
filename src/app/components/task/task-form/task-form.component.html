@@ -1,4 +1,6 @@
-<app-dialog title="Создание задачи">
+<app-dialog
+  title="{{ mode === 'create' ? 'Создание задачи' : 'Редактирование задачи' }}"
+>
   <mat-form-field dialog-content>
     <mat-label>Input</mat-label>
     <input matInput [(ngModel)]="title" />
@@ -9,5 +11,7 @@
   </mat-form-field>
 
   <button dialog-actions mat-button (click)="onNoClick()">No Thanks</button>
-  <button dialog-actions mat-button (click)="onOkClick()">Create</button>
+  <button dialog-actions mat-button (click)="onOkClick()">
+    {{ mode === "create" ? "Create" : "Save" }}
+  </button>
 </app-dialog>

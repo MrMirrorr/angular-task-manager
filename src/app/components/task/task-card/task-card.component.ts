@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ITask } from '../../../models/task.model';
 import { TaskService } from '../../../services/task.service';
+import { TaskFormComponent } from '../task-form/task-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-task-card',
@@ -27,7 +29,7 @@ export class TaskCardComponent {
   @Input() public task!: ITask;
   public isLoading: boolean = false;
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
   changeTaskStatus(event: MatSlideToggleChange) {
     this.isLoading = true;
@@ -57,5 +59,15 @@ export class TaskCardComponent {
         this.isLoading = false;
       }
     );
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      data: { mode: 'edit', task: this.task },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
   }
 }

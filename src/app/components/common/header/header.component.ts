@@ -16,7 +16,9 @@ export class HeaderComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(TaskFormComponent);
+    const dialogRef = this.dialog.open(TaskFormComponent, {
+      data: { mode: 'create' },
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');

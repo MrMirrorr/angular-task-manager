@@ -8,7 +8,9 @@
       [disabled]="isLoading"
     ></mat-slide-toggle>
     <div class="flex-center">
-      <button mat-stroked-button color="accent">Edit</button>
+      <button mat-stroked-button color="accent" (click)="openDialog()">
+        Edit
+      </button>
       <button mat-stroked-button color="warn" (click)="removeTask()">
         Delete
       </button>

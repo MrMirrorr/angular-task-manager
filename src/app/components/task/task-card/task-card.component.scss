@@ -1,0 +1,29 @@
+.task-card {
+  max-width: 400px;
+  height: 100%;
+  margin: 0 auto;
+  justify-content: space-between;
+  color: #ffffff;
+
+  .content {
+    flex-grow: 1;
+  }
+
+  .flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer {
+    min-height: 4px;
+  }
+}

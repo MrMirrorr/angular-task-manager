@@ -1,0 +1,13 @@
+<app-dialog title="Создание задачи">
+  <mat-form-field dialog-content>
+    <mat-label>Input</mat-label>
+    <input matInput [(ngModel)]="title" />
+  </mat-form-field>
+  <mat-form-field dialog-content>
+    <mat-label>Textarea</mat-label>
+    <textarea matInput [(ngModel)]="description"></textarea>
+  </mat-form-field>
+
+  <button dialog-actions mat-button (click)="onNoClick()">No Thanks</button>
+  <button dialog-actions mat-button (click)="onOkClick()">Create</button>
+</app-dialog>

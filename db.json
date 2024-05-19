@@ -4,13 +4,13 @@
       "title": "Task 1",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
       "id": "1",
-      "complete": false
+      "complete": true
     },
     {
       "title": "Task 2",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
       "id": "2",
-      "complete": false
+      "complete": true
     },
     {
       "title": "Task 3",
@@ -29,6 +29,12 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
       "id": "5",
       "complete": true
+    },
+    {
+      "title": "qwe",
+      "description": "asd",
+      "complete": false,
+      "id": "_Xv6NgX"
     }
   ]
 }

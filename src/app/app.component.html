@@ -1,9 +1,7 @@
 <app-header></app-header>
 
-<app-content
-  [tasks]="tasks"
-  [isLoading]="isLoading"
-  [error]="error"
-></app-content>
+<app-main-content>
+  <app-task-list></app-task-list>
+</app-main-content>
 
 <router-outlet></router-outlet>

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TaskFormComponent } from '../task-form/task-form.component';
+import { TaskFormComponent } from '../../task/task-form/task-form.component';
 
 @Component({
   selector: 'app-header',

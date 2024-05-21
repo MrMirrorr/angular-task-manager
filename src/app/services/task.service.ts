@@ -52,7 +52,18 @@ export class TaskService {
   }
 
   updateTask(task: ITask): Observable<ITask> {
-    return this.http.put<ITask>(`${this.tasksUrl}/${task.id}`, task);
+    return this.http.put<ITask>(`${this.tasksUrl}/${task.id}`, task).pipe(
+      tap((newTaskFromServer: ITask) => {
+        const currentTasks = this.tasksSubject.getValue();
+        const updatedTasks = currentTasks.map((t) => {
+          if (t.id === newTaskFromServer.id) {
+            return newTaskFromServer;
+          }
+          return t;
+        });
+        this.tasksSubject.next(updatedTasks);
+      })
+    );
   }
 
   deleteTask(taskId: string): Observable<void> {

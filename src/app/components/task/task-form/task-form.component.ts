@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -22,9 +22,11 @@ import { TaskMode } from './types';
   templateUrl: './task-form.component.html',
   styleUrl: './task-form.component.scss',
 })
-export class TaskFormComponent implements OnInit {
+export class TaskFormComponent {
+  public id: string = '';
   public title: string = '';
   public description: string = '';
+  public complete: boolean = false;
   @Input() public mode: TaskMode = 'create';
 
   constructor(
@@ -35,16 +37,10 @@ export class TaskFormComponent implements OnInit {
     this.mode = data.mode;
 
     if (data.task && data.mode === 'edit') {
+      this.id = data.task.id;
       this.title = data.task.title;
       this.description = data.task.description;
-    }
-  }
-
-  ngOnInit() {
-    if (this.mode === 'edit') {
-      console.log('Editing task');
-    } else {
-      console.log('Creating task');
+      this.complete = data.task.complete;
     }
   }
 
@@ -55,16 +51,39 @@ export class TaskFormComponent implements OnInit {
       complete: false,
     };
 
-    if (this.mode === 'edit') {
-    this.taskService.createTask(newTask).subscribe(
-      (newTask) => {
-        console.log('Task created', newTask);
-        this.dialogRef.close();
-      },
-      (error) => {
-        console.error('Error creating task', error);
-      }
-    );
+    const newTaskWithId: ITask = {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      complete: this.complete,
+    };
+
+    switch (this.mode) {
+      case 'create':
+        this.taskService.createTask(newTask).subscribe(
+          (newTask) => {
+            console.log('Task created', newTask);
+            this.dialogRef.close();
+          },
+          (error) => {
+            console.error('Error creating task', error);
+          }
+        );
+        break;
+      case 'edit':
+        this.taskService.updateTask(newTaskWithId).subscribe(
+          (newTask) => {
+            console.log('Task created', newTask);
+            this.dialogRef.close();
+          },
+          (error) => {
+            console.error('Error editing task', error);
+          }
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   onNoClick(): void {

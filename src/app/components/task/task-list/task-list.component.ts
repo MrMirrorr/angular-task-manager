@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { finalize, switchMap, tap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ITask } from '../../../models/task.model';
-import { TaskService } from '../../../services/task.service';
+import { TaskService } from 'app/services/task.service';
 import { TaskCardComponent } from '../task-card/task-card.component';
+import { ITask } from 'app/models/task.model';
 
 @Component({
   selector: 'app-task-list',
@@ -12,19 +13,22 @@ import { TaskCardComponent } from '../task-card/task-card.component';
   styleUrl: './task-list.component.scss',
 })
 export class TaskListComponent implements OnInit {
-  tasks: ITask[] = [];
   isLoading = false;
   error = '';
+  public tasks: ITask[] = [];
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    this.taskService.isLoading$.subscribe(
-      (isLoading) => (this.isLoading = isLoading)
-    );
-
-    this.taskService.error$.subscribe((error) => (this.error = error));
-
-    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
+    this.taskService.refresh$
+      .pipe(
+        tap(() => (this.isLoading = true)),
+        switchMap(() =>
+          this.taskService
+            .getTasks()
+            .pipe(finalize(() => (this.isLoading = false)))
+        )
+      )
+      .subscribe((tasksFromServer) => (this.tasks = tasksFromServer));
   }
 }

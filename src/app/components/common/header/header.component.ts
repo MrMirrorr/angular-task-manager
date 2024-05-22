@@ -1,27 +1,23 @@
+import { AsyncPipe, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TaskFormComponent } from '../../task/task-form/task-form.component';
+import { MenuStateService } from 'app/services/menu-state.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, AsyncPipe, NgFor],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   public title = 'Angular task manager';
+  public menu$ = this._menuStateService.menu$;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(private readonly _menuStateService: MenuStateService) {}
+}
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(TaskFormComponent, {
-      data: { mode: 'create' },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
+export interface IAction {
+  name: string;
+  action: any;
 }

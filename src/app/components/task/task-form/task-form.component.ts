@@ -4,10 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { TaskService } from '../../../services/task.service';
-import { INewTask, ITask } from '../../../models/task.model';
-import { DialogComponent } from '../../common/dialog/dialog.component';
-import { TaskMode } from './types';
+import { DialogComponent } from 'app/components/common';
+import { TaskService } from 'app/services/task.service';
+import { INewTask, ITask } from 'app/models/task.model';
+import { IDialogData, TaskMode } from './types';
 
 @Component({
   selector: 'app-task-form',
@@ -27,12 +27,12 @@ export class TaskFormComponent {
   public title: string = '';
   public description: string = '';
   public complete: boolean = false;
-  @Input() public mode: TaskMode = 'create';
+  public mode: TaskMode = 'create';
 
   constructor(
     private taskService: TaskService,
     public dialogRef: MatDialogRef<DialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { mode: TaskMode; task?: ITask }
+    @Inject(MAT_DIALOG_DATA) public data: IDialogData
   ) {
     this.mode = data.mode;
 
@@ -60,15 +60,10 @@ export class TaskFormComponent {
 
     switch (this.mode) {
       case 'create':
-        this.taskService.createTask(newTask).subscribe(
-          (newTask) => {
-            console.log('Task created', newTask);
-            this.dialogRef.close();
-          },
-          (error) => {
-            console.error('Error creating task', error);
-          }
-        );
+        this.taskService.createTask(newTask).subscribe((newTask) => {
+          console.log('Task created', newTask);
+          this.dialogRef.close();
+        });
         break;
       case 'edit':
         this.taskService.updateTask(newTaskWithId).subscribe(

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { tap } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import {
   MatSlideToggleChange,
@@ -7,10 +8,11 @@ import {
 } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ITask } from '../../../models/task.model';
-import { TaskService } from '../../../services/task.service';
-import { TaskFormComponent } from '../task-form/task-form.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TaskService } from 'app/services/task.service';
+import { ITask } from 'app/models/task.model';
+import { TaskFormComponent } from '../task-form/task-form.component';
+import { IDialogData } from '../task-form/types';
 
 @Component({
   selector: 'app-task-card',
@@ -32,42 +34,26 @@ export class TaskCardComponent {
   constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
   changeTaskStatus(event: MatSlideToggleChange) {
-    this.isLoading = true;
     this.taskService
-      .updateTask({ ...this.task, complete: event.checked })
-      .subscribe(
-        (taskFromServer: ITask) => {
-          this.task = taskFromServer;
-          this.isLoading = false;
-        },
-        (error) => {
-          console.log(error);
-          this.isLoading = false;
-          event.source.checked = this.task.complete;
-        }
-      );
+      .updateTaskStatus({ ...this.task, complete: event.checked })
+      .pipe(tap(() => (this.isLoading = true)))
+      .subscribe((taskFromServer) => {
+        this.task = taskFromServer;
+        this.isLoading = false;
+      });
   }
 
   removeTask() {
     this.isLoading = true;
-    this.taskService.deleteTask(this.task.id).subscribe(
-      () => {
-        this.isLoading = false;
-      },
-      (error) => {
-        console.log(error);
-        this.isLoading = false;
-      }
-    );
+    this.taskService
+      .deleteTask(this.task.id)
+      .subscribe(() => (this.isLoading = false));
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(TaskFormComponent, {
-      data: { mode: 'edit', task: this.task },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+    const data: IDialogData = { mode: 'edit', task: this.task };
+    this.dialog.open<TaskFormComponent, IDialogData>(TaskFormComponent, {
+      data,
     });
   }
 }

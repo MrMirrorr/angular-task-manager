@@ -1,78 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, finalize } from 'rxjs';
-import { INewTask, ITask } from '../models/task.model';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { INewTask, ITask } from 'app/models/task.model';
+import { environment } from 'environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class TaskService {
-  private tasksUrl = 'http://localhost:3001/tasks';
-  private tasksSubject = new BehaviorSubject<ITask[]>([]);
-  public tasks$ = this.tasksSubject.asObservable();
-  private isLoadingSubject = new BehaviorSubject<boolean>(false);
-  public isLoading$ = this.isLoadingSubject.asObservable();
-  private errorSubject = new BehaviorSubject<string>('');
-  public error$ = this.errorSubject.asObservable();
+  private tasksUrl = `${environment.apiUrl}/tasks`;
+  refresh$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {
-    this.loadTasks();
-  }
-
-  private loadTasks() {
-    this.isLoadingSubject.next(true);
-
-    this.http
-      .get<ITask[]>(this.tasksUrl)
-      .pipe(
-        tap((tasksFromServer) => {
-          this.tasksSubject.next(tasksFromServer);
-          this.errorSubject.next('');
-        }),
-        catchError((error) => {
-          console.error('Error loading tasks:', error);
-          this.errorSubject.next(error.message);
-          throw new Error(error.message);
-        }),
-        finalize(() => this.isLoadingSubject.next(false))
-      )
-      .subscribe();
-  }
+  constructor(private http: HttpClient) {}
 
   getTasks(): Observable<ITask[]> {
-    return this.tasks$;
+    return this.http.get<ITask[]>(this.tasksUrl);
   }
 
-  createTask(task: INewTask): Observable<ITask> {
-    return this.http.post<ITask>(this.tasksUrl, task).pipe(
-      tap((newTaskFromServer: ITask) => {
-        const currentTasks = this.tasksSubject.getValue();
-        currentTasks.push(newTaskFromServer);
-        this.tasksSubject.next(currentTasks);
-      })
-    );
+  createTask(task: INewTask) {
+    return this.http
+      .post<ITask>(this.tasksUrl, task)
+      .pipe(tap(() => this.refresh$.next(false)));
   }
 
-  updateTask(task: ITask): Observable<ITask> {
-    return this.http.put<ITask>(`${this.tasksUrl}/${task.id}`, task).pipe(
-      tap((newTaskFromServer: ITask) => {
-        const currentTasks = this.tasksSubject.getValue();
-        const updatedTasks = currentTasks.map((t) => {
-          if (t.id === newTaskFromServer.id) {
-            return newTaskFromServer;
-          }
-          return t;
-        });
-        this.tasksSubject.next(updatedTasks);
-      })
-    );
+  updateTaskStatus(task: ITask) {
+    return this.http.put<ITask>(`${this.tasksUrl}/${task.id}`, task);
   }
 
-  deleteTask(taskId: string): Observable<void> {
-    return this.http.delete<void>(`${this.tasksUrl}/${taskId}`).pipe(
-      tap(() => {
-        const currentTasks = this.tasksSubject.getValue();
-        const updatedTasks = currentTasks.filter((task) => task.id !== taskId);
-        this.tasksSubject.next(updatedTasks);
-      })
-    );
+  updateTask(task: ITask) {
+    return this.http
+      .put<ITask>(`${this.tasksUrl}/${task.id}`, task)
+      .pipe(tap(() => this.refresh$.next(false)));
+  }
+
+  deleteTask(taskId: string) {
+    return this.http
+      .delete<void>(`${this.tasksUrl}/${taskId}`)
+      .pipe(tap(() => this.refresh$.next(false)));
   }
 }

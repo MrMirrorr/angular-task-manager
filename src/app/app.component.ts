@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   public ngOnInit() {
     this._menuStateService.menu$.next([
-      { name: 'ADD', action: () => this.openDialog() },
+      { name: 'Create new', action: () => this.openDialog() },
     ]);
   }
 

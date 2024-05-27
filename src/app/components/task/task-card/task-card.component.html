@@ -5,13 +5,14 @@
     <mat-slide-toggle
       [checked]="task.complete"
       (change)="changeTaskStatus($event)"
+      (click)="preventNavigation($event)"
       [disabled]="isLoading"
     ></mat-slide-toggle>
     <div class="flex-center">
-      <button mat-stroked-button color="accent" (click)="openDialog()">
+      <button mat-stroked-button color="accent" (click)="openDialog($event)">
         Edit
       </button>
-      <button mat-stroked-button color="warn" (click)="removeTask()">
+      <button mat-stroked-button color="warn" (click)="removeTask($event)">
         Delete
       </button>
     </div>

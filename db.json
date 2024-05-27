@@ -2,51 +2,21 @@
   "tasks": [
     {
       "title": "Task 1",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
+      "description": "Description 1",
       "id": "1",
       "complete": true
     },
     {
       "title": "Task 2",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
+      "description": "Description 2",
       "id": "2",
+      "complete": false
+    },
+    {
+      "id": "56d6",
+      "title": "xzcs",
+      "description": "cvbbv",
       "complete": true
-    },
-    {
-      "id": "3",
-      "title": "Task 3",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
-      "complete": false
-    },
-    {
-      "id": "4",
-      "title": "Task 4dd",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc tincidunt ultricies",
-      "complete": true
-    },
-    {
-      "id": "6344",
-      "title": "asd",
-      "description": "zxczx",
-      "complete": false
-    },
-    {
-      "id": "a28d",
-      "title": "assddd",
-      "description": "dxvcvячяч фы",
-      "complete": false
-    },
-    {
-      "id": "67c0",
-      "title": "sdas  sdsds",
-      "description": "asdas",
-      "complete": false
-    },
-    {
-      "id": "a8ac",
-      "title": "sd",
-      "description": "sdsd",
-      "complete": false
     }
   ]
 }

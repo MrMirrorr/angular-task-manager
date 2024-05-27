@@ -1,0 +1,25 @@
+<app-main-content>
+  @if (isLoading) {
+
+  <mat-spinner class="spinner" color="accent"></mat-spinner>
+
+  } @else if (error) {
+
+  <p>Error: {{ error }}</p>
+
+  } @else if (tasks.length) {
+
+  <div class="grid">
+    @for (task of tasks; track task.id) {
+    <a [routerLink]="'/task/' + task.id">
+      <app-task-card [task]="task"></app-task-card>
+    </a>
+    }
+  </div>
+
+  } @else {
+
+  <p>No tasks found</p>
+
+  }
+</app-main-content>

@@ -33,6 +33,11 @@ export class TaskCardComponent {
 
   constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
+  preventNavigation(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   changeTaskStatus(event: MatSlideToggleChange) {
     this.taskService
       .updateTaskStatus({ ...this.task, complete: event.checked })
@@ -43,14 +48,16 @@ export class TaskCardComponent {
       });
   }
 
-  removeTask() {
+  removeTask(event: Event) {
+    this.preventNavigation(event);
     this.isLoading = true;
     this.taskService
       .deleteTask(this.task.id)
       .subscribe(() => (this.isLoading = false));
   }
 
-  openDialog(): void {
+  openDialog(event: Event): void {
+    this.preventNavigation(event);
     const data: IDialogData = { mode: 'edit', task: this.task };
     this.dialog.open<TaskFormComponent, IDialogData>(TaskFormComponent, {
       data,

@@ -1,13 +1,20 @@
 <app-dialog
   title="{{ mode === 'create' ? 'Создание задачи' : 'Редактирование задачи' }}"
+  [formGroup]="taskForm"
 >
   <mat-form-field dialog-content>
     <mat-label>Input</mat-label>
-    <input matInput [(ngModel)]="title" />
+    <input matInput formControlName="title" />
+    <mat-error *ngIf="title?.invalid"
+      >Title is <strong>required</strong></mat-error
+    >
   </mat-form-field>
   <mat-form-field dialog-content>
     <mat-label>Textarea</mat-label>
-    <textarea matInput [(ngModel)]="description"></textarea>
+    <textarea matInput formControlName="description"></textarea>
+    @if (description?.invalid) {
+    <mat-error>Description is <strong>required</strong></mat-error>
+    }
   </mat-form-field>
 
   <button dialog-actions mat-button (click)="onNoClick()">No Thanks</button>

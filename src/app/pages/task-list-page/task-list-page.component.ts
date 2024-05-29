@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { finalize, switchMap, tap } from 'rxjs';
+import { debounceTime, finalize, switchMap, tap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TaskService } from 'app/services/task.service';
+import { TaskService } from 'app/services';
 import { TaskCardComponent } from 'app/components/task';
 import { ITask } from 'app/models/task.model';
 import { MainContentComponent } from 'app/components/common';
@@ -21,7 +21,6 @@ import { MainContentComponent } from 'app/components/common';
 })
 export class TaskListPageComponent implements OnInit {
   isLoading = false;
-  error = '';
   public tasks: ITask[] = [];
 
   constructor(private taskService: TaskService) {}
@@ -36,6 +35,9 @@ export class TaskListPageComponent implements OnInit {
             .pipe(finalize(() => (this.isLoading = false)))
         )
       )
-      .subscribe((tasksFromServer) => (this.tasks = tasksFromServer));
+      .subscribe((tasksFromServer) => {
+        this.isLoading = false;
+        this.tasks = tasksFromServer;
+      });
   }
 }

@@ -1,17 +1,14 @@
-@if (isLoading) {
+<app-main-content>
+  @if (isLoading) {
 
-<mat-spinner class="spinner" color="accent"></mat-spinner>
+  <mat-spinner class="spinner" color="accent"></mat-spinner>
 
-} @else if (error) {
+  } @else if (task) {
 
-<p>Error: {{ error }}</p>
+  <p>Title: {{ task.title }}</p>
+  <p>Description: {{ task.description }}</p>
 
-} @else if (task) {
-
-<p>{{ task.id }}</p>
-<p>{{ task.title }}</p>
-<p>{{ task.description }}</p>
-
-} @else {
-<p>No task found</p>
-}
+  } @else {
+  <p>No task found</p>
+  }
+</app-main-content>

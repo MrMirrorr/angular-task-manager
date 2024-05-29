@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import {
   MatSlideToggleChange,
@@ -9,7 +9,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { TaskService } from 'app/services/task.service';
+import { AlertService, TaskService } from 'app/services';
 import { ITask } from 'app/models/task.model';
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { IDialogData } from '../task-form/types';
@@ -31,7 +31,11 @@ export class TaskCardComponent {
   @Input() public task!: ITask;
   public isLoading: boolean = false;
 
-  constructor(private taskService: TaskService, public dialog: MatDialog) {}
+  constructor(
+    private taskService: TaskService,
+    private alertService: AlertService,
+    public dialog: MatDialog
+  ) {}
 
   preventNavigation(event: Event) {
     event.preventDefault();
@@ -41,19 +45,28 @@ export class TaskCardComponent {
   changeTaskStatus(event: MatSlideToggleChange) {
     this.taskService
       .updateTaskStatus({ ...this.task, complete: event.checked })
-      .pipe(tap(() => (this.isLoading = true)))
+      .pipe(
+        tap(() => (this.isLoading = true)),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe((taskFromServer) => {
         this.task = taskFromServer;
-        this.isLoading = false;
+        this.alertService.showAlert(
+          'Task status updated successfully',
+          'success'
+        );
       });
   }
 
   removeTask(event: Event) {
     this.preventNavigation(event);
-    this.isLoading = true;
     this.taskService
       .deleteTask(this.task.id)
-      .subscribe(() => (this.isLoading = false));
+      .pipe(
+        tap(() => (this.isLoading = true)),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe(() => this.alertService.showAlert('Task deleted', 'success'));
   }
 
   openDialog(event: Event): void {

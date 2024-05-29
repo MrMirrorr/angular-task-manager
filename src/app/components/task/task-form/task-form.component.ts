@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogComponent } from 'app/components/common';
-import { TaskService } from 'app/services/task.service';
+import { AlertService, TaskService } from 'app/services';
 import { INewTask, ITask } from 'app/models/task.model';
 import { IDialogData, TaskMode } from './types';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -46,7 +46,8 @@ export class TaskFormComponent {
     private taskService: TaskService,
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private alertService: AlertService
   ) {
     this.mode = data.mode;
 
@@ -98,21 +99,16 @@ export class TaskFormComponent {
 
     switch (this.mode) {
       case 'create':
-        this.taskService.createTask(newTask).subscribe((newTask) => {
-          console.log('Task created', newTask);
+        this.taskService.createTask(newTask).subscribe(() => {
           this.dialogRef.close();
+          this.alertService.showAlert('Task created', 'success');
         });
         break;
       case 'edit':
-        this.taskService.updateTask(newTaskWithId).subscribe(
-          (newTask) => {
-            console.log('Task created', newTask);
-            this.dialogRef.close();
-          },
-          (error) => {
-            console.error('Error editing task', error);
-          }
-        );
+        this.taskService.updateTask(newTaskWithId).subscribe(() => {
+          this.dialogRef.close();
+          this.alertService.showAlert('Task updated', 'success');
+        });
         break;
       default:
         break;

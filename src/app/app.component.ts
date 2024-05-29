@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent, MainContentComponent } from './components/common';
-import { TaskFormComponent, TaskListComponent } from './components/task';
+import { TaskFormComponent } from './components/task';
 import { MenuStateService } from './services/menu-state.service';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    HeaderComponent,
-    MainContentComponent,
-    TaskListComponent,
-  ],
+  imports: [RouterOutlet, HeaderComponent, MainContentComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

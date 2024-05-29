@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute } from '@angular/router';
-import { delay } from 'rxjs';
+import { finalize } from 'rxjs';
 import { ITask } from 'app/models/task.model';
-import { TaskService } from 'app/services/task.service';
+import { TaskService } from 'app/services';
+import { MainContentComponent } from 'app/components/common';
 
 @Component({
   selector: 'app-task-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule],
+  imports: [MainContentComponent, MatProgressSpinnerModule],
   templateUrl: './task-page.component.html',
   styleUrl: './task-page.component.scss',
 })
@@ -26,10 +27,9 @@ export class TaskPageComponent implements OnInit {
     this.isLoading = true;
     this.taskService
       .getTaskById(this.taskId)
-      .pipe(delay(1000))
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((task) => {
         this.task = task;
-        this.isLoading = false;
       });
   }
 }
